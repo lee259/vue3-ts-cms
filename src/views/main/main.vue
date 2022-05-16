@@ -9,7 +9,9 @@
           <nav-header @fold-change="handleFoldChange" />
         </el-header>
         <el-main class="main-content">
-          <router-view></router-view>
+          <div class="page-white">
+            <router-view></router-view>
+          </div>
         </el-main>
       </el-container>
     </el-container>
@@ -72,6 +74,10 @@ export default defineComponent({
     .main-content {
       text-align: center;
       background-color: #f0f2f5;
+      .page-white {
+        background-color: #fff;
+        border-radius: 5px;
+      }
     }
   }
 }
