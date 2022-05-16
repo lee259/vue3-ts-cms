@@ -1,6 +1,7 @@
 import { Module } from 'vuex'
 
 import router from '@/router'
+import { userMenusToRoutes } from '@/utils/map-menus'
 
 import {
   accontLoginRequest,
@@ -32,6 +33,12 @@ const loginModule: Module<ILoginState, IRootState> = {
     },
     changeUserMenus(state, userMenus: any) {
       state.userMenus = userMenus
+      //拿到 usermenus中的route
+      const routes = userMenusToRoutes(userMenus)
+      //将route放到router.main.children
+      routes.forEach((route) => {
+        router.addRoute('main', route)
+      })
     }
   },
   actions: {

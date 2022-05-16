@@ -2,14 +2,15 @@
   <div class="nav-menu">
     <div class="logo">
       <img src="@/assets/img/logo.svg" alt="logo" />
-      <span class="title">Vue3+TS</span>
+      <span v-show="!collapse" class="title">Vue3+TS</span>
     </div>
     <el-menu
       active-text-color="#ffd04b"
-      background-color="#545c64"
+      background-color="#0c2135"
       class="el-menu-vertical"
       default-active="2"
       text-color="#fff"
+      :collapse="collapse"
       @open="handleOpen"
       @close="handleClose"
     >
@@ -17,23 +18,26 @@
         <!-- 二级菜单 -->
         <template v-if="item.type === 1">
           <!-- 二级菜单可以展开的标题 -->
-          <el-submenu>
+          <el-submenu :index="item.id + ''">
             <template #title>
               <i v-if="item.icon" :class="item.icon"></i>
               <span>{{ item.name }}</span>
             </template>
+            <!-- 遍历里面的item -->
+            <template v-for="subitem in item.children" :key="subitem.id">
+              <el-menu-item
+                :index="subitem.id + ''"
+                @click="handleMenuItemClick(subitem)"
+              >
+                <i v-if="subitem.icon" :class="subitem.icon"></i>
+                <span>{{ subitem.name }}</span>
+              </el-menu-item>
+            </template>
           </el-submenu>
-          <!-- 遍历里面的item -->
-          <template v-for="subitem in item.children" :key="subitem.id">
-            <el-menu-item>
-              <i v-if="subitem.icon" :class="subitem.icon"></i>
-              <span>{{ subitem.name }}</span>
-            </el-menu-item>
-          </template>
         </template>
         <!-- 一级菜单 -->
         <template v-else-if="item.type === 2">
-          <el-menu-item>
+          <el-menu-item :index="item.id + ''">
             <i v-if="item.icon" :class="item.icon"></i>
             <span>{{ item.name }}</span>
           </el-menu-item>
@@ -46,18 +50,31 @@
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
 import { useStore } from '@/store'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
+  props: {
+    collapse: {
+      type: Boolean,
+      default: false
+    }
+  },
   setup() {
+    const router = useRouter()
     const store = useStore()
     const userMenus = computed(() => store.state.login.userMenus)
+    const handleMenuItemClick = (subitem: any) => {
+      router.push({
+        path: subitem.url ?? '/not-found'
+      })
+    }
     const handleOpen = (key: string, keyPath: string[]) => {
       console.log(key, keyPath)
     }
     const handleClose = (key: string, keyPath: string[]) => {
       console.log(key, keyPath)
     }
-    return { userMenus, handleOpen, handleClose }
+    return { userMenus, handleOpen, handleClose, handleMenuItemClick }
   }
 })
 </script>
@@ -66,6 +83,7 @@ export default defineComponent({
 .nav-menu {
   height: 100%;
   background-color: #001529;
+  margin-left: -5px;
 
   .logo {
     display: flex;

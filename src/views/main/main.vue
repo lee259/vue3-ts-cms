@@ -1,27 +1,42 @@
 <template>
   <div class="common-content">
     <el-container class="page">
-      <el-aside width="210px" class="aside-content">
-        <nav-menu />
+      <el-aside :width="isCollapse ? '60px' : '210px'">
+        <nav-menu :collapse="isCollapse" />
       </el-aside>
       <el-container>
-        <el-header class="header-content">Header</el-header>
-        <el-main class="main-content">Main</el-main>
+        <el-header class="header-content">
+          <nav-header @fold-change="handleFoldChange" />
+        </el-header>
+        <el-main class="main-content">
+          <router-view></router-view>
+        </el-main>
       </el-container>
     </el-container>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
+
 import navMenu from '@/components/nav-menu'
+import NavHeader from '@/components/nav-header/src/nav-header.vue'
 
 export default defineComponent({
   components: {
-    navMenu
+    navMenu,
+    NavHeader
   },
   setup() {
-    return {}
+    const isCollapse = ref(false)
+    const handleFoldChange = (isFold: boolean) => {
+      isCollapse.value = isFold
+    }
+
+    return {
+      handleFoldChange,
+      isCollapse
+    }
   }
 })
 </script>
@@ -35,8 +50,20 @@ export default defineComponent({
   height: 100%;
   .page {
     height: 100%;
-    .aside-content {
-      background-color: #001523;
+    .el-aside {
+      overflow-x: hidden;
+      overflow-y: auto;
+      line-height: 200px;
+      text-align: left;
+      cursor: pointer;
+      background-color: #001529;
+      transition: width 0.3s linear;
+      scrollbar-width: none; /* firefox */
+      -ms-overflow-style: none; /* IE 10+ */
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
     }
     .header-content {
       line-height: 48px;
