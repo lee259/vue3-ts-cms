@@ -1,7 +1,7 @@
 import { Module } from 'vuex'
 
 import router from '@/router'
-import { userMenusToRoutes } from '@/utils/map-menus'
+import { userMenusToRoutes, mapMenustopermissions } from '@/utils/map-menus'
 
 import {
   accontLoginRequest,
@@ -20,7 +20,8 @@ const loginModule: Module<ILoginState, IRootState> = {
     return {
       token: '',
       userInfo: {},
-      userMenus: []
+      userMenus: [],
+      permissions: []
     }
   },
   getters: {},
@@ -39,6 +40,8 @@ const loginModule: Module<ILoginState, IRootState> = {
       routes.forEach((route) => {
         router.addRoute('main', route)
       })
+      const permissions = mapMenustopermissions(userMenus)
+      state.permissions = permissions
     }
   },
   actions: {

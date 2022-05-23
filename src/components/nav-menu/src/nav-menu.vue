@@ -8,7 +8,7 @@
       active-text-color="#ffd04b"
       background-color="#0c2135"
       class="el-menu-vertical"
-      default-active="2"
+      :default-active="defaultValue"
       text-color="#fff"
       :collapse="collapse"
       @open="handleOpen"
@@ -48,9 +48,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed, ref } from 'vue'
 import { useStore } from '@/store'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
+import { pathMapToMenu } from '@/utils/map-menus'
 
 export default defineComponent({
   props: {
@@ -60,6 +61,7 @@ export default defineComponent({
     }
   },
   setup() {
+    const route = useRoute()
     const router = useRouter()
     const store = useStore()
     const userMenus = computed(() => store.state.login.userMenus)
@@ -68,13 +70,22 @@ export default defineComponent({
         path: subitem.url ?? '/not-found'
       })
     }
+    const currentPath = route.path
+    const menu = pathMapToMenu(userMenus.value, currentPath)
+    const defaultValue = ref(menu.id + '')
     const handleOpen = (key: string, keyPath: string[]) => {
       console.log(key, keyPath)
     }
     const handleClose = (key: string, keyPath: string[]) => {
       console.log(key, keyPath)
     }
-    return { userMenus, handleOpen, handleClose, handleMenuItemClick }
+    return {
+      userMenus,
+      handleOpen,
+      handleClose,
+      handleMenuItemClick,
+      defaultValue
+    }
   }
 })
 </script>

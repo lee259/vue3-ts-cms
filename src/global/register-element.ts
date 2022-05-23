@@ -1,5 +1,7 @@
 import { App } from 'vue'
+
 import 'element-plus/lib/theme-chalk/base.css'
+
 import {
   ElButton,
   ElCheckbox,
@@ -28,7 +30,12 @@ import {
   ElCol,
   ElSelect,
   ElOption,
-  ElDatePicker
+  ElDatePicker,
+  ElTable,
+  ElTableColumn,
+  ElPagination,
+  ElImage,
+  ElDialog
 } from 'element-plus'
 
 const components = [
@@ -59,7 +66,12 @@ const components = [
   ElCol,
   ElSelect,
   ElOption,
-  ElDatePicker
+  ElDatePicker,
+  ElTable,
+  ElTableColumn,
+  ElPagination,
+  ElImage,
+  ElDialog
 ]
 
 export default function (app: App): void {
